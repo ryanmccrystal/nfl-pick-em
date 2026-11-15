@@ -6,9 +6,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>NFL Pick'em - Week 1</title>
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
   body {
-    font-family: Arial, sans-serif;
+    font-family: 'Source Sans 3', sans-serif;
     background: white;
     color: #222;
     margin: 25px;
@@ -16,39 +20,42 @@
 
   h2 {
     font-size: 22px;
-    font-weight: normal;
+    font-weight: 500;
     margin-bottom: 18px;
   }
 
   .table-container {
     width: 100%;
+    max-width: 1350px;
     overflow-x: auto;
   }
 
   table {
     border-collapse: collapse;
-    font-size: 13px;
-    white-space: nowrap;
+    font-size: 14px;
     width: 100%;
+    table-layout: fixed;
   }
 
   th, td {
     border: 1px solid #ddd;
-    padding: 7px 9px;
+    padding: 7px 5px;
     text-align: center;
+    overflow-wrap: break-word;
   }
 
   th {
     background: #f2f2f2;
-    font-weight: bold;
+    font-weight: 600;
   }
 
   th:first-child, td:first-child {
     text-align: left;
-    font-weight: bold;
+    font-weight: 600;
     position: sticky;
     left: 0;
     background: white;
+    width: 14%;
   }
 
   th:first-child {
@@ -63,9 +70,24 @@
     background: #fafafa;
   }
 
-  .error {
-    color: #b00020;
-    margin-top: 20px;
+  /* Equal widths for game columns */
+  .game-column {
+    width: 8.5%;
+  }
+
+  /* Narrower confidence columns */
+  .conf-column {
+    width: 3.5%;
+  }
+
+  @media (max-width: 700px) {
+    body {
+      margin: 12px;
+    }
+
+    table {
+      min-width: 1050px;
+    }
   }
 </style>
 </head>
@@ -98,7 +120,6 @@ async function loadData() {
       throw new Error("Week 1 worksheet not found.");
     }
 
-    // Create username-to-last-name lookup
     const lastNames = {};
 
     if (users) {
@@ -112,11 +133,22 @@ async function loadData() {
       });
     }
 
-    // Only display columns A through O
     const headers = week.headers.slice(0, 15);
     const rows = week.rows;
 
-    let html = "<table><thead><tr>";
+    let html = "<table><colgroup>";
+
+    headers.forEach((header, index) => {
+      if (index === 0) {
+        html += '<col style="width:14%">';
+      } else if (String(header).trim().toLowerCase() === "conf") {
+        html += '<col class="conf-column">';
+      } else {
+        html += '<col class="game-column">';
+      }
+    });
+
+    html += "</colgroup><thead><tr>";
 
     headers.forEach((header, index) => {
       const heading = index === 0 ? "Last Name" : header;
@@ -131,7 +163,6 @@ async function loadData() {
       for (let i = 0; i < 15; i++) {
         let value = row[i] || "";
 
-        // Replace username with last name in column A
         if (i === 0 && value) {
           value = lastNames[String(value).trim()] || value;
         }
@@ -148,7 +179,7 @@ async function loadData() {
 
   } catch (error) {
     container.innerHTML =
-      `<p class="error">${escapeHTML(error.message)}</p>`;
+      `<p style="color:#b00020">${escapeHTML(error.message)}</p>`;
   }
 }
 
