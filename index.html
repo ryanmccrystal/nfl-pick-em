@@ -133,7 +133,7 @@ async function loadData() {
       });
     }
 
-    const headers = week.headers.slice(0, 15);
+    const headers = week.headers.slice(0, 16);
     const rows = week.rows;
 
     let html = "<table><colgroup>";
@@ -141,7 +141,7 @@ async function loadData() {
     headers.forEach((header, index) => {
       if (index === 0) {
         html += '<col style="width:14%">';
-      } else if (String(header).trim().toLowerCase() === "conf") {
+      } else if (String(header).trim().toLowerCase() === "conf" || index === 15) {
         html += '<col class="conf-column">';
       } else {
         html += '<col class="game-column">';
@@ -160,7 +160,7 @@ async function loadData() {
     rows.forEach(row => {
       html += "<tr>";
 
-      for (let i = 0; i < 15; i++) {
+      for (let i = 0; i < 16; i++) {
         let value = row[i] || "";
 
         if (i === 0 && value) {
