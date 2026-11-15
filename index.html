@@ -1,0 +1,169 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NFL Pick'em - Week 1</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: white;
+    color: #222;
+    margin: 25px;
+  }
+
+  h2 {
+    font-size: 22px;
+    font-weight: normal;
+    margin-bottom: 18px;
+  }
+
+  .table-container {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  table {
+    border-collapse: collapse;
+    font-size: 13px;
+    white-space: nowrap;
+    width: 100%;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 7px 9px;
+    text-align: center;
+  }
+
+  th {
+    background: #f2f2f2;
+    font-weight: bold;
+  }
+
+  th:first-child, td:first-child {
+    text-align: left;
+    font-weight: bold;
+    position: sticky;
+    left: 0;
+    background: white;
+  }
+
+  th:first-child {
+    background: #f2f2f2;
+  }
+
+  tr:nth-child(even) td {
+    background: #fafafa;
+  }
+
+  tr:nth-child(even) td:first-child {
+    background: #fafafa;
+  }
+
+  .error {
+    color: #b00020;
+    margin-top: 20px;
+  }
+</style>
+</head>
+
+<body>
+
+<h2>Week 1</h2>
+
+<div id="table-container" class="table-container">
+  Loading...
+</div>
+
+<script>
+async function loadData() {
+  const container = document.getElementById("table-container");
+
+  try {
+    const response = await fetch("data/data.json");
+
+    if (!response.ok) {
+      throw new Error("Unable to load spreadsheet data.");
+    }
+
+    const data = await response.json();
+
+    const week = data.sheets.find(sheet => sheet.name === "Week 1");
+    const users = data.sheets.find(sheet => sheet.name === "Users");
+
+    if (!week) {
+      throw new Error("Week 1 worksheet not found.");
+    }
+
+    // Create username-to-last-name lookup
+    const lastNames = {};
+
+    if (users) {
+      users.rows.forEach(row => {
+        const username = String(row[0] || "").trim();
+        const lastName = String(row[1] || "").trim();
+
+        if (username && lastName) {
+          lastNames[username] = lastName;
+        }
+      });
+    }
+
+    // Only display columns A through O
+    const headers = week.headers.slice(0, 15);
+    const rows = week.rows;
+
+    let html = "<table><thead><tr>";
+
+    headers.forEach((header, index) => {
+      const heading = index === 0 ? "Last Name" : header;
+      html += `<th>${escapeHTML(heading)}</th>`;
+    });
+
+    html += "</tr></thead><tbody>";
+
+    rows.forEach(row => {
+      html += "<tr>";
+
+      for (let i = 0; i < 15; i++) {
+        let value = row[i] || "";
+
+        // Replace username with last name in column A
+        if (i === 0 && value) {
+          value = lastNames[String(value).trim()] || value;
+        }
+
+        html += `<td>${escapeHTML(value)}</td>`;
+      }
+
+      html += "</tr>";
+    });
+
+    html += "</tbody></table>";
+
+    container.innerHTML = html;
+
+  } catch (error) {
+    container.innerHTML =
+      `<p class="error">${escapeHTML(error.message)}</p>`;
+  }
+}
+
+function escapeHTML(value) {
+  return String(value).replace(/[&<>"']/g, character => ({
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#39;"
+  })[character]);
+}
+
+loadData();
+</script>
+
+</body>
+</html>
