@@ -144,7 +144,7 @@ async function loadData() {
     const lastNames = {};
 
     if (users) {
-      users.
+      users.rows.forEach(row => {
         const username = String(row[0] || "").trim();
         const lastName = String(row[1] || "").trim();
 
