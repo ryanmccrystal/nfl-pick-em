@@ -107,7 +107,6 @@
 
   .wildcards {
     font-size: 14px;
-    font-weight: 700;
     margin-top: 8px;
     margin-bottom: 18px;
     margin-left: 8px;
@@ -299,7 +298,7 @@ async function loadData() {
     // Display Wildcards from cell W5
     const wildcards = rows[3]?.[22] || "";
     
-    html += `<p class="wildcards">Wildcards: ${escapeHTML(wildcards)}</p>`;
+    html += `<p class="wildcards"><strong>Wildcards:</strong> ${escapeHTML(wildcards)}</p>`;
 
 
     container.innerHTML = html;
