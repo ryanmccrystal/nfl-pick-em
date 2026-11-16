@@ -101,11 +101,14 @@
     width: 3.5%;
   }
 
-  .tally-heading {
-    font-size: 18px;
-    font-weight: 500;
-    margin-top: 22px;
-    margin-bottom: 8px;
+  .tally-table {
+    margin-top: 12px;
+  }
+
+  .wildcards {
+    font-size: 14px;
+    margin-top: 8px;
+    margin-bottom: 18px;
   }
 
   @media (max-width: 700px) {
@@ -271,7 +274,7 @@ async function loadData() {
         let value = "";
     
         if (i === 0 && rowIndex === 0) {
-          value = "TOTAL PICKS";
+          value = "Pick Distribution";
         }
 
         const game = tallyGames.find(g => g.gameCol === i);
@@ -290,6 +293,11 @@ async function loadData() {
     });
 
     html += '</tbody></table>';
+
+    // Display Wildcards from cell W5
+    const wildcards = rows[3]?.[22] || "";
+    
+    html += `<p class="wildcards">Wildcards: ${escapeHTML(wildcards)}</p>`;
 
 
     container.innerHTML = html;
