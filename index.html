@@ -178,14 +178,22 @@ async function loadData() {
 
     html += "</tr></thead><tbody>";
 
-    rows.forEach(row => {
-      html += "<tr>";
+
+    // Get game results from the entire worksheet
+    const winners = new Set();
+    const losers = new Set();
     
-      // Updated results columns:
-      // S (index 18) = Winner
-      // T (index 19) = Loser
+    rows.forEach(row => {
       const winner = String(row[18] || "").trim();
       const loser = String(row[19] || "").trim();
+    
+      if (winner) winners.add(winner);
+      if (loser) losers.add(loser);
+    });
+    
+    // Build participant rows
+    rows.forEach(row => {
+      html += "<tr>";
     
       for (let i = 0; i < 16; i++) {
         let value = row[i] || "";
@@ -196,15 +204,15 @@ async function loadData() {
           value = lastNames[String(value).trim()] || value;
         }
     
-        // Game picks are in columns B, D, F, H, J, L, N
-        // and column O (index 14) is the WC pick.
-        // Column P (index 15) is the score, so don't color it.
+        // Color game picks based on results anywhere in S and T
         const isPickColumn = [1, 3, 5, 7, 9, 11, 13, 14].includes(i);
     
         if (isPickColumn && value) {
-          if (value.trim() === winner && winner) {
+          const pick = String(value).trim();
+    
+          if (winners.has(pick)) {
             cellStyle = "background-color: #32c98d;";
-          } else if (value.trim() === loser && loser) {
+          } else if (losers.has(pick)) {
             cellStyle = "background-color: #fc6799;";
           }
         }
@@ -214,6 +222,7 @@ async function loadData() {
     
       html += "</tr>";
     });
+
 
 
     html += "</tbody></table>";
