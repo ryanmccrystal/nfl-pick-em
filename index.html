@@ -112,6 +112,31 @@
     margin-left: 8px;
   }
 
+  #week-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  #week-nav a {
+    color: #333;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  
+  #week-nav a:hover {
+    text-decoration: underline;
+  }
+  
+  #week-nav a.active {
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
   @media (max-width: 700px) {
     body {
       margin: 12px;
@@ -126,7 +151,8 @@
 
 <body>
 
-<h2>Week 1</h2>
+<nav id="week-nav"></nav>
+<h2 id="week-title">Week 1</h2>
 
 <div id="table-container" class="table-container">
   Loading...
@@ -135,6 +161,16 @@
 <script>
 async function loadData() {
   const container = document.getElementById("table-container");
+  const requestedWeek = new URLSearchParams(window.location.search).get("week") || "1";
+
+  const weekNumber =
+    /^\d+$/.test(requestedWeek) &&
+    Number(requestedWeek) >= 1 &&
+    Number(requestedWeek) <= 18
+      ? Number(requestedWeek)
+      : 1;
+  
+  const weekName = "Week " + weekNumber;
 
   try {
     const response = await fetch("data/data.json");
@@ -145,7 +181,24 @@ async function loadData() {
 
     const data = await response.json();
 
-    const week = data.sheets.find(sheet => sheet.name === "Week 1");
+    const week = data.sheets.find(sheet => sheet.name === weekName);
+    // Update page heading
+    document.getElementById("week-title").textContent = weekName;
+    
+    // Build week navigation
+    const weekNav = document.getElementById("week-nav");
+    
+    weekNav.innerHTML = Array.from({ length: 18 }, (_, i) => {
+      const number = i + 1;
+    
+      return `
+        <a href="?week=${number}"
+           class="${number === weekNumber ? 'active' : ''}">
+           Week ${number}
+        </a>
+      `;
+    }).join("");
+    
     const users = data.sheets.find(sheet => sheet.name === "Users");
 
     if (!week) {
