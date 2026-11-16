@@ -247,7 +247,6 @@ async function loadData() {
 
     const tallySourceRows = [rows[0] || [], rows[1] || []];
 
-    html += '<h3 class="tally-heading">Total Picks</h3>';
     html += '<table class="tally-table"><colgroup>';
 
     // Use exactly the same column widths as the picks table
@@ -265,11 +264,15 @@ async function loadData() {
 
     html += '</colgroup><tbody>';
 
-    tallySourceRows.forEach(sourceRow => {
+    tallySourceRows.forEach((sourceRow, rowIndex) => {
       html += '<tr>';
-
+    
       for (let i = 0; i < 16; i++) {
         let value = "";
+    
+        if (i === 0 && rowIndex === 0) {
+          value = "TOTAL PICKS";
+        }
 
         const game = tallyGames.find(g => g.gameCol === i);
         const conf = tallyGames.find(g => g.confCol === i);
