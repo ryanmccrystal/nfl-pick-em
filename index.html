@@ -202,7 +202,7 @@ async function loadData() {
     const users = data.sheets.find(sheet => sheet.name === "Users");
 
     if (!week) {
-      throw new Error("Week 1 worksheet not found.");
+      throw new Error(weekName + " worksheet not found.");
     }
 
     const lastNames = {};
