@@ -218,15 +218,48 @@ async function loadData() {
       });
     }
 
-    const headers = week.headers.slice(0, 16);
+    const headers = [
+      "Last Name",
+      "Score",
+      "Season",
+      ...week.headers.slice(1, 15)
+    ];
     const rows = week.rows;
+    // Calculate cumulative season scores by username
+    const seasonTotals = {};
+    
+    for (let w = 1; w <= weekNumber; w++) {
+      const previousWeek = data.sheets.find(
+        sheet => sheet.name === `Week ${w}`
+      );
+    
+      if (!previousWeek) continue;
+    
+      previousWeek.rows.forEach(playerRow => {
+        const username = String(playerRow[0] || "").trim();
+        const rawScore = String(playerRow[15] || "").trim();
+    
+        if (!username || rawScore === "") return;
+    
+        const score = Number(rawScore.replace(/,/g, ""));
+    
+        if (Number.isFinite(score)) {
+          seasonTotals[username] =
+            (seasonTotals[username] || 0) + score;
+        }
+      });
+    }
 
     let html = "<table><colgroup>";
 
     headers.forEach((header, index) => {
       if (index === 0) {
         html += '<col style="width:14%">';
-      } else if (String(header).trim().toLowerCase() === "conf" || index === 15) {
+      } else if (index === 1) {
+        html += '<col style="width:5%">';
+      } else if (index === 2) {
+        html += '<col style="width:6%">';
+      } else if (index % 2 === 0) {
         html += '<col class="conf-column">';
       } else {
         html += '<col class="game-column">';
@@ -247,13 +280,48 @@ async function loadData() {
     const winners = new Set();
     const losers = new Set();
     
+
     rows.forEach(row => {
+      html += "<tr>";
+    
       const winner = String(row[18] || "").trim();
       const loser = String(row[19] || "").trim();
     
-      if (winner) winners.add(winner);
-      if (loser) losers.add(loser);
+      const username = String(row[0] || "").trim();
+    
+      for (let i = 0; i < 17; i++) {
+        let value = "";
+        let cellStyle = "";
+    
+        if (i === 0) {
+          value = lastNames[username] || username;
+        } else if (i === 1) {
+          value = row[15] || "";
+        } else if (i === 2) {
+          value = seasonTotals[username] ?? 0;
+        } else {
+          value = row[i - 2] || "";
+        }
+    
+        // Game picks, including Wildcards
+        const isPickColumn = [3, 5, 7, 9, 11, 13, 15].includes(i);
+    
+        if (isPickColumn && value) {
+          const pick = String(value).trim();
+    
+          if (winners.has(pick)) {
+            cellStyle = "background-color: #32c98d;";
+          } else if (losers.has(pick)) {
+            cellStyle = "background-color: #fc6799;";
+          }
+        }
+    
+        html += `<td style="${cellStyle}">${escapeHTML(value)}</td>`;
+      }
+    
+      html += "</tr>";
     });
+
     
     // Build participant rows
     rows.forEach(row => {
@@ -294,12 +362,12 @@ async function loadData() {
     
     // Build Total Picks table
     const tallyGames = [
-      { gameCol: 1, confCol: 2, teamCol: 22, countCol: 23 },
-      { gameCol: 3, confCol: 4, teamCol: 24, countCol: 25 },
-      { gameCol: 5, confCol: 6, teamCol: 26, countCol: 27 },
-      { gameCol: 7, confCol: 8, teamCol: 28, countCol: 29 },
-      { gameCol: 9, confCol: 10, teamCol: 30, countCol: 31 },
-      { gameCol: 11, confCol: 12, teamCol: 32, countCol: 33 }
+      { gameCol: 3, confCol: 4, teamCol: 22, countCol: 23 },
+      { gameCol: 5, confCol: 6, teamCol: 24, countCol: 25 },
+      { gameCol: 7, confCol: 8, teamCol: 26, countCol: 27 },
+      { gameCol: 9, confCol: 10, teamCol: 28, countCol: 29 },
+      { gameCol: 11, confCol: 12, teamCol: 30, countCol: 31 },
+      { gameCol: 13, confCol: 14, teamCol: 32, countCol: 33 }
     ];
 
     const tallySourceRows = [rows[0] || [], rows[1] || []];
@@ -310,9 +378,11 @@ async function loadData() {
     headers.forEach((header, index) => {
       if (index === 0) {
         html += '<col style="width:14%">';
-      } else if (
-        String(header).trim().toLowerCase() === "conf" || index === 15
-      ) {
+      } else if (index === 1) {
+        html += '<col style="width:5%">';
+      } else if (index === 2) {
+        html += '<col style="width:6%">';
+      } else if (index % 2 === 0) {
         html += '<col class="conf-column">';
       } else {
         html += '<col class="game-column">';
@@ -324,7 +394,7 @@ async function loadData() {
     tallySourceRows.forEach((sourceRow, rowIndex) => {
       html += '<tr>';
     
-      for (let i = 0; i < 16; i++) {
+      for (let i = 0; i < 17; i++) {
         let value = "";
     
         if (i === 0 && rowIndex === 0) {
