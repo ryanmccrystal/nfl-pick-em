@@ -158,10 +158,13 @@
   Loading...
 </div>
 
+
 <script>
 async function loadData() {
   const container = document.getElementById("table-container");
-  const requestedWeek = new URLSearchParams(window.location.search).get("week") || "1";
+
+  const requestedWeek =
+    new URLSearchParams(window.location.search).get("week") || "1";
 
   const weekNumber =
     /^\d+$/.test(requestedWeek) &&
@@ -169,7 +172,7 @@ async function loadData() {
     Number(requestedWeek) <= 18
       ? Number(requestedWeek)
       : 1;
-  
+
   const weekName = "Week " + weekNumber;
 
   try {
@@ -182,15 +185,21 @@ async function loadData() {
     const data = await response.json();
 
     const week = data.sheets.find(sheet => sheet.name === weekName);
+    const users = data.sheets.find(sheet => sheet.name === "Users");
+
+    if (!week) {
+      throw new Error(weekName + " worksheet not found.");
+    }
+
     // Update page heading
     document.getElementById("week-title").textContent = weekName;
-    
+
     // Build week navigation
     const weekNav = document.getElementById("week-nav");
-    
+
     weekNav.innerHTML = Array.from({ length: 18 }, (_, i) => {
       const number = i + 1;
-    
+
       return `
         <a href="?week=${number}"
            class="${number === weekNumber ? 'active' : ''}">
@@ -198,13 +207,8 @@ async function loadData() {
         </a>
       `;
     }).join("");
-    
-    const users = data.sheets.find(sheet => sheet.name === "Users");
 
-    if (!week) {
-      throw new Error(weekName + " worksheet not found.");
-    }
-
+    // Build username-to-last-name lookup
     const lastNames = {};
 
     if (users) {
@@ -218,31 +222,26 @@ async function loadData() {
       });
     }
 
-    const headers = [
-      "Last Name",
-      "Score",
-      "Season",
-      ...week.headers.slice(1, 15)
-    ];
     const rows = week.rows;
+
     // Calculate cumulative season scores by username
     const seasonTotals = {};
-    
+
     for (let w = 1; w <= weekNumber; w++) {
       const previousWeek = data.sheets.find(
         sheet => sheet.name === `Week ${w}`
       );
-    
+
       if (!previousWeek) continue;
-    
+
       previousWeek.rows.forEach(playerRow => {
         const username = String(playerRow[0] || "").trim();
         const rawScore = String(playerRow[15] || "").trim();
-    
+
         if (!username || rawScore === "") return;
-    
+
         const score = Number(rawScore.replace(/,/g, ""));
-    
+
         if (Number.isFinite(score)) {
           seasonTotals[username] =
             (seasonTotals[username] || 0) + score;
@@ -250,116 +249,105 @@ async function loadData() {
       });
     }
 
+    // Main table headers:
+    // Last Name | Score | Season | Original columns B through O
+    const headers = [
+      "Last Name",
+      "Score",
+      "Season",
+      ...week.headers.slice(1, 15)
+    ];
+
+    // Define column widths consistently
+    function addColumnWidths() {
+      headers.forEach((header, index) => {
+        if (index === 0) {
+          html += '<col style="width:14%">';
+        } else if (index === 1) {
+          html += '<col style="width:5%">';
+        } else if (index === 2) {
+          html += '<col style="width:6%">';
+        } else if (index % 2 === 0) {
+          html += '<col class="conf-column">';
+        } else {
+          html += '<col class="game-column">';
+        }
+      });
+    }
+
     let html = "<table><colgroup>";
 
-    headers.forEach((header, index) => {
-      if (index === 0) {
-        html += '<col style="width:14%">';
-      } else if (index === 1) {
-        html += '<col style="width:5%">';
-      } else if (index === 2) {
-        html += '<col style="width:6%">';
-      } else if (index % 2 === 0) {
-        html += '<col class="conf-column">';
-      } else {
-        html += '<col class="game-column">';
-      }
-    });
+    addColumnWidths();
 
     html += "</colgroup><thead><tr>";
 
+    // Build sortable column headings
     headers.forEach((header, index) => {
-      const heading = index === 0 ? "Last Name" : header;
-      html += `<th data-column="${index}">${escapeHTML(heading)}</th>`;
+      html += `<th data-column="${index}">${escapeHTML(header)}</th>`;
     });
 
     html += "</tr></thead><tbody>";
 
-
-    // Get game results from the entire worksheet
+    // Get winners and losers from the entire worksheet
     const winners = new Set();
     const losers = new Set();
-    
 
     rows.forEach(row => {
-      html += "<tr>";
-    
       const winner = String(row[18] || "").trim();
       const loser = String(row[19] || "").trim();
-    
-      const username = String(row[0] || "").trim();
-    
-      for (let i = 0; i < 17; i++) {
-        let value = "";
-        let cellStyle = "";
-    
-        if (i === 0) {
-          value = lastNames[username] || username;
-        } else if (i === 1) {
-          value = row[15] || "";
-        } else if (i === 2) {
-          value = seasonTotals[username] ?? 0;
-        } else {
-          value = row[i - 2] || "";
-        }
-    
-        // Game picks, including Wildcards
-        const isPickColumn = [3, 5, 7, 9, 11, 13, 15].includes(i);
-    
-        if (isPickColumn && value) {
-          const pick = String(value).trim();
-    
-          if (winners.has(pick)) {
-            cellStyle = "background-color: #32c98d;";
-          } else if (losers.has(pick)) {
-            cellStyle = "background-color: #fc6799;";
-          }
-        }
-    
-        html += `<td style="${cellStyle}">${escapeHTML(value)}</td>`;
-      }
-    
-      html += "</tr>";
+
+      if (winner) winners.add(winner);
+      if (loser) losers.add(loser);
     });
 
-    
     // Build participant rows
     rows.forEach(row => {
       html += "<tr>";
-    
-      for (let i = 0; i < 16; i++) {
-        let value = row[i] || "";
+
+      const username = String(row[0] || "").trim();
+
+      for (let i = 0; i < 17; i++) {
+        let value = "";
         let cellStyle = "";
-    
-        // Replace username with last name
-        if (i === 0 && value) {
-          value = lastNames[String(value).trim()] || value;
+
+        if (i === 0) {
+          // Last Name
+          value = lastNames[username] || username;
+
+        } else if (i === 1) {
+          // Weekly Score
+          value = row[15] || "";
+
+        } else if (i === 2) {
+          // Cumulative Season Score
+          value = seasonTotals[username] ?? 0;
+
+        } else {
+          // Original spreadsheet columns B through O
+          value = row[i - 2] || "";
         }
-    
-        // Color game picks based on results anywhere in S and T
-        const isPickColumn = [1, 3, 5, 7, 9, 11, 13, 14].includes(i);
-    
+
+        // Game picks and Wildcard pick
+        const isPickColumn = [3, 5, 7, 9, 11, 13, 15].includes(i);
+
         if (isPickColumn && value) {
           const pick = String(value).trim();
-    
+
           if (winners.has(pick)) {
             cellStyle = "background-color: #32c98d;";
           } else if (losers.has(pick)) {
             cellStyle = "background-color: #fc6799;";
           }
         }
-    
+
         html += `<td style="${cellStyle}">${escapeHTML(value)}</td>`;
       }
-    
+
       html += "</tr>";
     });
 
-
-
     html += "</tbody></table>";
 
-    
     // Build Total Picks table
     const tallyGames = [
       { gameCol: 3, confCol: 4, teamCol: 22, countCol: 23 },
@@ -370,33 +358,25 @@ async function loadData() {
       { gameCol: 13, confCol: 14, teamCol: 32, countCol: 33 }
     ];
 
-    const tallySourceRows = [rows[0] || [], rows[1] || []];
+    // Tally data comes from spreadsheet rows 2 and 3
+    const tallySourceRows = [
+      rows[0] || [],
+      rows[1] || []
+    ];
 
     html += '<table class="tally-table"><colgroup>';
 
-    // Use exactly the same column widths as the picks table
-    headers.forEach((header, index) => {
-      if (index === 0) {
-        html += '<col style="width:14%">';
-      } else if (index === 1) {
-        html += '<col style="width:5%">';
-      } else if (index === 2) {
-        html += '<col style="width:6%">';
-      } else if (index % 2 === 0) {
-        html += '<col class="conf-column">';
-      } else {
-        html += '<col class="game-column">';
-      }
-    });
+    addColumnWidths();
 
     html += '</colgroup><tbody>';
 
     tallySourceRows.forEach((sourceRow, rowIndex) => {
       html += '<tr>';
-    
+
       for (let i = 0; i < 17; i++) {
         let value = "";
-    
+
+        // First cell of first row
         if (i === 0 && rowIndex === 0) {
           value = "Pick Distribution";
         }
@@ -420,46 +400,55 @@ async function loadData() {
 
     // Display Wildcards from cell W5
     const wildcards = rows[3]?.[22] || "";
-    
-    html += `<p class="wildcards"><strong>Wildcards:</strong> ${escapeHTML(wildcards)}</p>`;
 
+    html += `
+      <p class="wildcards">
+        <strong>Wildcards:</strong> ${escapeHTML(wildcards)}
+      </p>
+    `;
 
+    // Display completed tables
     container.innerHTML = html;
 
+    // Enable sorting on the main table
     const table = container.querySelector("table");
     const tableHeaders = table.querySelectorAll("th");
-    
+
     let currentSortColumn = -1;
     let sortAscending = true;
-    
+
     tableHeaders.forEach(header => {
       header.addEventListener("click", () => {
         const column = Number(header.dataset.column);
-    
+
         if (currentSortColumn === column) {
           sortAscending = !sortAscending;
         } else {
           currentSortColumn = column;
           sortAscending = true;
         }
-    
+
         const tbody = table.querySelector("tbody");
-        const rows = Array.from(tbody.querySelectorAll("tr"));
-    
-        rows.sort((a, b) => {
+        const tableRows = Array.from(tbody.querySelectorAll("tr"));
+
+        tableRows.sort((a, b) => {
           const valueA = a.cells[column].textContent.trim();
           const valueB = b.cells[column].textContent.trim();
-    
+
           if (!valueA) return 1;
           if (!valueB) return -1;
-    
+
           const numberA = Number(valueA);
           const numberB = Number(valueB);
-    
+
           let comparison;
-    
-          if (valueA !== "" && valueB !== "" &&
-              !isNaN(numberA) && !isNaN(numberB)) {
+
+          if (
+            valueA !== "" &&
+            valueB !== "" &&
+            !isNaN(numberA) &&
+            !isNaN(numberB)
+          ) {
             comparison = numberA - numberB;
           } else {
             comparison = valueA.localeCompare(valueB, undefined, {
@@ -467,16 +456,16 @@ async function loadData() {
               sensitivity: "base"
             });
           }
-    
+
           return sortAscending ? comparison : -comparison;
         });
-    
-        rows.forEach(row => tbody.appendChild(row));
-    
+
+        tableRows.forEach(row => tbody.appendChild(row));
+
         tableHeaders.forEach(th => {
           th.classList.remove("sorted-asc", "sorted-desc");
         });
-    
+
         header.classList.add(
           sortAscending ? "sorted-asc" : "sorted-desc"
         );
