@@ -556,12 +556,10 @@ function buildPlayerPage(data, username, lastNames) {
     const pickIndexes = [1,3,5,7,9,11,13];
     const spreadIndex = pickHeaders.findIndex(h => /spread|\bline\b|@[A-Z]{2,3}.*[+-]\d/i.test(h));
     const wildcardIndex = pickHeaders.findIndex(h => /wild.?card|\bwc\b/i.test(h));
-    // The wildcard game is the game whose header contains the point spread.
-    // It can move columns from week to week, so use the header to identify it.
-    const spreadPos = spreadIndex >= 0 ? spreadIndex : 5;
-    const wildcardPos = spreadPos;
-    const normalPositions = pickIndexes.map((_, pos) => pos).filter(pos => pos !== wildcardPos);
-    const orderedPositions = [...normalPositions, wildcardPos];
+    // Wildcard and spread are separate columns: identify each from its own header.
+    const spreadPos = spreadIndex >= 0 ? spreadIndex : -1;
+    const wildcardPos = wildcardIndex >= 0 ? wildcardIndex : -1;
+    const orderedPositions = pickIndexes.map((_, pos) => pos);
 
     const winners = new Set();
     const losers = new Set();
@@ -575,7 +573,7 @@ function buildPlayerPage(data, username, lastNames) {
     const picks = orderedPositions.map(pos => {
       let pick = String(playerRow[pickIndexes[pos]] || "").trim();
       const confidence = Number(playerRow[pickIndexes[pos] + 1]) || 0;
-      const header = pickHeaders[pos] || (pos === spreadPos ? "Spread" : pos === wildcardPos ? "Wildcard" : `Gm${normalPositions.indexOf(pos)+1}`);
+      const header = pickHeaders[pos] || `Gm${pos + 1}`;
 
       // Convert the spread into the selected team's perspective.
       if (pos === spreadPos && pick) {
@@ -592,7 +590,7 @@ function buildPlayerPage(data, username, lastNames) {
         }
       }
 
-      // Mark the spread game as the wildcard game.
+      // Mark only the column explicitly labeled Wildcard.
       if (pos === wildcardPos && pick) pick += " (wc)";
 
       let cellStyle = "";
