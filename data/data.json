@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-22T13:50:19.544995+00:00",
+  "updated": "2026-11-22T16:55:03.482566+00:00",
   "sheets": [
     {
       "name": "Week 10",
@@ -7056,96 +7056,189 @@
       "name": "Users",
       "headers": [
         "Username",
-        "Name"
+        "Name",
+        "Champ",
+        "Year1",
+        "Year2",
+        "Year3",
+        "",
+        "Year",
+        "1st"
       ],
       "rows": [
         [
-          "AGILIAM",
-          "Giliam"
-        ],
-        [
-          "AKFISHERMAN",
-          "Johnson"
-        ],
-        [
-          "Alangoblue",
-          "Hickey"
-        ],
-        [
           "ANTHONY-TATASEO",
-          "A.Tasaseo"
-        ],
-        [
-          "AWARNER16",
-          "Warner"
+          "A.Tasaseo",
+          "🏆",
+          "2017",
+          "",
+          "",
+          "",
+          "2025",
+          "Patel"
         ],
         [
           "BArcher-913",
-          "Archer"
-        ],
-        [
-          "BKHILL0511",
-          "Hill"
-        ],
-        [
-          "BLAKELEAMY",
-          "Leamy"
-        ],
-        [
-          "CORYSMITH",
+          "Archer",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "2024",
           "Smith"
         ],
         [
-          "DOUBLEDOWN22",
+          "JACK-BOWIE",
+          "Bowie",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "2023",
           "Kennedy"
         ],
         [
-          "ERICMAROUN",
-          "Maroun"
-        ],
-        [
-          "GRIFFIN-DAVID191",
-          "D.Griffin"
-        ],
-        [
-          "GWILLS610",
-          "Wills"
-        ],
-        [
-          "JACK-BOWIE",
-          "Bowie"
+          "theJCook",
+          "Cook",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "2022",
+          "Huling"
         ],
         [
           "JAKE-CUCAROLA",
-          "Cucarola"
-        ],
-        [
-          "JARED-RISK",
+          "Cucarola",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "2021",
           "Risk"
         ],
         [
-          "jbp20",
-          "Periman"
+          "GRIFFIN-DAVID191",
+          "D.Griffin",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "2020",
+          "Leibering"
+        ],
+        [
+          "Vanilla-Ike",
+          "Eichenbaum",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "2019",
+          "Dorman"
+        ],
+        [
+          "Tank-373",
+          "F.Tataseo",
+          "🏆",
+          "2017",
+          "",
+          "",
+          "",
+          "2018",
+          "Billinger"
+        ],
+        [
+          "AGILIAM",
+          "Giliam",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "2017",
+          "A/F Tataseo"
+        ],
+        [
+          "Alangoblue",
+          "Hickey",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "2016",
+          "T.Keyler"
+        ],
+        [
+          "BKHILL0511",
+          "Hill",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "2015",
+          "Dorman"
         ],
         [
           "JESSELEEHOLT",
-          "Holt"
+          "Holt",
+          "",
+          "",
+          "",
+          "",
+          "",
+          "2014",
+          "Plant"
         ],
         [
           "JGMM0909",
           "J.Griffin"
         ],
         [
+          "AKFISHERMAN",
+          "Johnson"
+        ],
+        [
+          "DOUBLEDOWN22",
+          "Kennedy",
+          "🏆",
+          "2023"
+        ],
+        [
+          "TKEYLER",
+          "Keyler",
+          "🏆",
+          "2016"
+        ],
+        [
+          "BLAKELEAMY",
+          "Leamy"
+        ],
+        [
           "jlleiber",
-          "Leibering"
+          "Leibering",
+          "🏆",
+          "2020"
+        ],
+        [
+          "ERICMAROUN",
+          "Maroun"
+        ],
+        [
+          "rmcc13",
+          "McCrystal"
         ],
         [
           "JOHN-P-MICH",
           "Mich"
-        ],
-        [
-          "MIKETHO22",
-          "Thompson"
         ],
         [
           "OCONNORCOLLIN22",
@@ -7153,35 +7246,45 @@
         ],
         [
           "RAP005",
-          "Patel"
+          "Patel",
+          "🏆",
+          "2025"
         ],
         [
-          "rmcc13",
-          "McCrystal"
+          "jbp20",
+          "Periman"
+        ],
+        [
+          "WILL-PETERSON",
+          "Peterson"
+        ],
+        [
+          "JARED-RISK",
+          "Risk",
+          "🏆",
+          "2021"
+        ],
+        [
+          "CORYSMITH",
+          "Smith",
+          "🏆",
+          "2024"
+        ],
+        [
+          "MIKETHO22",
+          "Thompson"
         ],
         [
           "rosstracey",
           "Tracey"
         ],
         [
-          "Tank-373",
-          "F.Tataseo"
+          "AWARNER16",
+          "Warner"
         ],
         [
-          "theJCook",
-          "Cook"
-        ],
-        [
-          "TKEYLER",
-          "Keyler"
-        ],
-        [
-          "Vanilla-Ike",
-          "Eichenbaum"
-        ],
-        [
-          "WILL-PETERSON",
-          "Peterson"
+          "GWILLS610",
+          "Wills"
         ]
       ]
     }
