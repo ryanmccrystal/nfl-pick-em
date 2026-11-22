@@ -213,16 +213,27 @@ async function loadData() {
       `;
     }).join("");
 
-    // Build username-to-last-name lookup
+    // Build username lookups for last names and championship trophies
     const lastNames = {};
+    const championships = {};
 
     if (users) {
       users.rows.forEach(row => {
         const username = String(row[0] || "").trim();
         const lastName = String(row[1] || "").trim();
+        const champCell = String(row[2] || "");
 
         if (username && lastName) {
           lastNames[username] = lastName;
+        }
+
+        if (username && champCell.includes("🏆")) {
+          const trophyCount = (champCell.match(/🏆/g) || []).length;
+          const years = row.slice(3, 6)
+            .map(year => String(year || "").trim())
+            .filter(Boolean);
+
+          championships[username] = years.slice(0, trophyCount);
         }
       });
     }
@@ -352,7 +363,10 @@ async function loadData() {
         }
 
         if (i === 0) {
-          html += `<td style="${cellStyle}"><a class="player-link" href="?player=${encodeURIComponent(username)}">${escapeHTML(value)}</a></td>`;
+          const trophies = (championships[username] || []).map(year =>
+            `<span class="championship-trophy" title="${escapeHTML(year)}">🏆</span>`
+          ).join(" ");
+          html += `<td style="${cellStyle}"><a class="player-link" href="?player=${encodeURIComponent(username)}">${escapeHTML(value)}</a>${trophies ? ` ${trophies}` : ""}</td>`;
         } else {
           html += `<td style="${cellStyle}">${escapeHTML(value)}</td>`;
         }
