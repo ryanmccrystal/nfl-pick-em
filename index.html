@@ -1,196 +1,170 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NFL Pick'em</title>
+<title>NFL Pick'em - Week 1</title>
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-body {
-  font-family: 'Source Sans 3', sans-serif;
-  background: white;
-  color: #222;
-  margin: 25px;
-}
-
-h2 {
-  font-size: 22px;
-  font-weight: 500;
-  margin-bottom: 18px;
-}
-
-.table-container {
-  width: 100%;
-  max-width: 1350px;
-  margin: 0 auto;
-  overflow-x: auto;
-}
-
-table {
-  border-collapse: collapse;
-  font-size: 14px;
-  width: 100%;
-  table-layout: fixed;
-}
-
-th, td {
-  border: 1px solid #ddd;
-  padding: 3px 5px;
-  line-height: 1.2;
-  text-align: center;
-  overflow-wrap: break-word;
-}
-
-th {
-  background: #f2f2f2;
-  font-weight: 600;
-  cursor: pointer;
-  user-select: none;
-}
-
-th:hover {
-  background: #e5e5e5;
-}
-
-th.sorted-asc::after {
-  content: " ▲";
-  font-size: 10px;
-}
-
-th.sorted-desc::after {
-  content: " ▼";
-  font-size: 10px;
-}
-
-th:first-child, td:first-child {
-  text-align: left;
-  font-weight: 600;
-  position: sticky;
-  left: 0;
-  background: white;
-  width: 14%;
-  z-index: 1;
-}
-
-th:first-child {
-  background: #f2f2f2;
-}
-
-tr:nth-child(even) td {
-  background: #fafafa;
-}
-
-tr:nth-child(even) td:first-child {
-  background: #fafafa;
-}
-
-.game-column {
-  width: 5.5%;
-}
-
-.conf-column {
-  width: 3.5%;
-}
-
-.tally-table {
-  margin-top: 12px;
-}
-
-.wildcards {
-  font-size: 14px;
-  margin: 8px 0 18px 8px;
-}
-
-#week-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-bottom: 24px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #ddd;
-}
-
-#week-nav a {
-  color: #333;
-  text-decoration: none;
-  font-size: 15px;
-  font-weight: 500;
-}
-
-#week-nav a:hover {
-  text-decoration: underline;
-}
-
-#week-nav a.active {
-  font-weight: 700;
-  text-decoration: underline;
-}
-
-.player-link {
-  color: #222;
-  text-decoration: none;
-}
-
-.player-link:hover {
-  text-decoration: underline;
-}
-
-.player-table th:first-child,
-.player-table td:first-child {
-  width: 6%;
-  text-align: center;
-}
-
-.player-table .pick {
-  width: 5.5%;
-}
-
-.player-table .conf {
-  width: 3.5%;
-}
-
-.back-link {
-  display: inline-block;
-  margin-bottom: 15px;
-  color: #333;
-}
-
-@media (max-width: 700px) {
   body {
-    margin: 12px;
+    font-family: 'Source Sans 3', sans-serif;
+    background: white;
+    color: #222;
+    margin: 25px;
+  }
+
+  h2 {
+    font-size: 22px;
+    font-weight: 500;
+    margin-bottom: 18px;
+  }
+
+  .table-container {
+    width: 100%;
+    max-width: 1350px;
+    margin: 0 auto;
+    overflow-x: auto;
   }
 
   table {
-    min-width: 1050px;
+    border-collapse: collapse;
+    font-size: 14px;
+    width: 100%;
+    table-layout: fixed;
   }
-}
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 3px 5px;
+    line-height: 1.2;
+    text-align: center;
+    overflow-wrap: break-word;
+  }
+
+  th {
+    background: #f2f2f2;
+    font-weight: 600;
+  }
+
+  th:first-child, td:first-child {
+    text-align: left;
+    font-weight: 600;
+    position: sticky;
+    left: 0;
+    background: white;
+    width: 14%;
+  }
+
+  th {
+    cursor: pointer;
+    user-select: none;
+  }
+  
+  th:hover {
+    background: #e5e5e5;
+  }
+  
+  th.sorted-asc::after {
+    content: " ▲";
+    font-size: 10px;
+  }
+  
+  th.sorted-desc::after {
+    content: " ▼";
+    font-size: 10px;
+  }
+
+  th:first-child {
+    background: #f2f2f2;
+  }
+
+  tr:nth-child(even) td {
+    background: #fafafa;
+  }
+
+  tr:nth-child(even) td:first-child {
+    background: #fafafa;
+  }
+
+  /* Equal widths for game columns */
+  .game-column {
+    width: 5.5%;
+  }
+
+  /* Narrower confidence columns */
+  .conf-column {
+    width: 3.5%;
+  }
+
+  .tally-table {
+    margin-top: 12px;
+  }
+
+  .wildcards {
+    font-size: 14px;
+    margin-top: 8px;
+    margin-bottom: 18px;
+    margin-left: 8px;
+  }
+
+  #week-nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 24px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  #week-nav a {
+    color: #333;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+  }
+  
+  #week-nav a:hover {
+    text-decoration: underline;
+  }
+  
+  #week-nav a.active {
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
+  @media (max-width: 700px) {
+    body {
+      margin: 12px;
+    }
+
+    table {
+      min-width: 1050px;
+    }
+  }
 </style>
 </head>
 
 <body>
 
 <nav id="week-nav"></nav>
-
-<h2 id="week-title">Loading...</h2>
+<h2 id="week-title">Week 1</h2>
 
 <div id="table-container" class="table-container">
   Loading...
 </div>
 
+
 <script>
-
 async function loadData() {
-
   const container = document.getElementById("table-container");
 
-  const params = new URLSearchParams(window.location.search);
-
-  const playerUsername = params.get("player");
-
-  const requestedWeek = params.get("week") || "1";
+  const requestedWeek =
+    new URLSearchParams(window.location.search).get("week") || "1";
 
   const weekNumber =
     /^\d+$/.test(requestedWeek) &&
@@ -199,8 +173,9 @@ async function loadData() {
       ? Number(requestedWeek)
       : 1;
 
-  try {
+  const weekName = "Week " + weekNumber;
 
+  try {
     const response = await fetch("data/data.json");
 
     if (!response.ok) {
@@ -209,655 +184,311 @@ async function loadData() {
 
     const data = await response.json();
 
+    const week = data.sheets.find(sheet => sheet.name === weekName);
     const users = data.sheets.find(sheet => sheet.name === "Users");
 
+    if (!week) {
+      throw new Error(weekName + " worksheet not found.");
+    }
+
+    // Update page heading
+    document.getElementById("week-title").textContent = weekName;
+
+    // Build week navigation
+    const weekNav = document.getElementById("week-nav");
+
+    weekNav.innerHTML = Array.from({ length: 18 }, (_, i) => {
+      const number = i + 1;
+
+      return `
+        <a href="?week=${number}"
+           class="${number === weekNumber ? 'active' : ''}">
+           Week ${number}
+        </a>
+      `;
+    }).join("");
+
+    // Build username-to-last-name lookup
     const lastNames = {};
 
     if (users) {
       users.rows.forEach(row => {
-
         const username = String(row[0] || "").trim();
-
         const lastName = String(row[1] || "").trim();
 
         if (username && lastName) {
           lastNames[username] = lastName;
         }
-
       });
     }
 
-    const weeks = Array.from(
-      { length: 18 },
-      (_, i) => data.sheets.find(sheet => sheet.name === `Week ${i + 1}`)
-    ).filter(Boolean);
+    const rows = week.rows;
 
-    document.getElementById("week-nav").innerHTML =
-      Array.from({ length: 18 }, (_, i) => {
-
-        const number = i + 1;
-
-        return `
-          <a href="?week=${number}"
-             class="${!playerUsername && number === weekNumber ? 'active' : ''}">
-             Week ${number}
-          </a>
-        `;
-
-      }).join("");
-
-    function scoreOf(row) {
-
-      const raw = String(row?.[15] ?? "").trim();
-
-      if (!raw) return null;
-
-      const score = Number(raw.replace(/,/g, ""));
-
-      return Number.isFinite(score) ? score : null;
-    }
-
-    function rankMap(scores) {
-
-      const result = {};
-
-      scores.forEach(score => {
-
-        if (score === null || !Number.isFinite(score)) {
-          return;
-        }
-
-        const rank =
-          1 + scores.filter(other => other !== null && other > score).length;
-
-        const ties =
-          scores.filter(other => other === score).length;
-
-        result[score] = ties > 1
-          ? `T-${rank}`
-          : String(rank);
-
-      });
-
-      return result;
-    }
-
-    const weeklyStats = {};
-
+    // Calculate cumulative season scores by username
     const seasonTotals = {};
 
-    weeks.forEach(week => {
+    for (let w = 1; w <= weekNumber; w++) {
+      const previousWeek = data.sheets.find(
+        sheet => sheet.name === `Week ${w}`
+      );
 
-      const participants = week.rows
-        .slice(2)
-        .filter(row => String(row[0] || "").trim());
+      if (!previousWeek) continue;
 
-      const weekScores = participants.map(scoreOf);
+      previousWeek.rows.forEach(playerRow => {
+        const username = String(playerRow[0] || "").trim();
+        const rawScore = String(playerRow[15] || "").trim();
 
-      const weekRanks = rankMap(weekScores);
+        if (!username || rawScore === "") return;
 
-      weeklyStats[week.name] = {};
+        const score = Number(rawScore.replace(/,/g, ""));
 
-      participants.forEach(row => {
-
-        const username = String(row[0] || "").trim();
-
-        const score = scoreOf(row);
-
-        weeklyStats[week.name][username] = {
-          score: score ?? "",
-          rank: score === null ? "" : weekRanks[score]
-        };
-
-      });
-
-      participants.forEach(row => {
-
-        const username = String(row[0] || "").trim();
-
-        const score = scoreOf(row);
-
-        if (username && score !== null) {
-
+        if (Number.isFinite(score)) {
           seasonTotals[username] =
             (seasonTotals[username] || 0) + score;
-
         }
-
       });
-
-      const seasonScores = participants.map(row => {
-
-        const username = String(row[0] || "").trim();
-
-        return seasonTotals[username] ?? null;
-
-      });
-
-      const seasonRanks = rankMap(seasonScores);
-
-      participants.forEach(row => {
-
-        const username = String(row[0] || "").trim();
-
-        const seasonScore = seasonTotals[username];
-
-        weeklyStats[week.name][username].season =
-          seasonScore ?? "";
-
-        weeklyStats[week.name][username].seasonRank =
-          seasonScore === undefined
-            ? ""
-            : seasonRanks[seasonScore];
-
-      });
-
-    });
-
-    if (playerUsername) {
-
-      buildPlayerPage(
-        playerUsername,
-        weeks,
-        lastNames,
-        weeklyStats,
-        container
-      );
-
-    } else {
-
-      buildStandings(
-        weekNumber,
-        data,
-        lastNames,
-        seasonTotals,
-        container
-      );
-
     }
 
-  } catch (error) {
-
-    container.innerHTML =
-      `<p style="color:#b00020">${escapeHTML(error.message)}</p>`;
-
-  }
-
-}
-
-
-function buildStandings(
-  weekNumber,
-  data,
-  lastNames,
-  seasonTotals,
-  container
-) {
-
-  const weekName = `Week ${weekNumber}`;
-
-  const week = data.sheets.find(sheet => sheet.name === weekName);
-
-  if (!week) {
-    throw new Error(weekName + " worksheet not found.");
-  }
-
-  document.getElementById("week-title").textContent = weekName;
-
-  const rows = week.rows.slice(2);
-
-  const headers = [
-    "Last Name",
-    "Score",
-    "Season",
-    ...week.headers.slice(1, 15)
-  ];
-
-  let html = "<table><colgroup>";
-
-  headers.forEach((header, index) => {
-
-    if (index === 0) {
-      html += '<col style="width:14%">';
-    } else if (index === 1) {
-      html += '<col style="width:5%">';
-    } else if (index === 2) {
-      html += '<col style="width:6%">';
-    } else if (index % 2 === 0) {
-      html += '<col class="conf-column">';
-    } else {
-      html += '<col class="game-column">';
-    }
-
-  });
-
-  html += "</colgroup><thead><tr>";
-
-  headers.forEach((header, index) => {
-
-    html += `<th data-column="${index}">${escapeHTML(header)}</th>`;
-
-  });
-
-  html += "</tr></thead><tbody>";
-
-  const winners = new Set();
-
-  const losers = new Set();
-
-  week.rows.forEach(row => {
-
-    const winner = String(row[18] || "").trim();
-
-    const loser = String(row[19] || "").trim();
-
-    if (winner) winners.add(winner);
-
-    if (loser) losers.add(loser);
-
-  });
-
-  rows.forEach(row => {
-
-    const username = String(row[0] || "").trim();
-
-    if (!username) return;
-
-    html += "<tr>";
-
-    for (let i = 0; i < 17; i++) {
-
-      let value = "";
-
-      let style = "";
-
-      if (i === 0) {
-
-        value = lastNames[username] || username;
-
-      } else if (i === 1) {
-
-        value = row[15] || "";
-
-      } else if (i === 2) {
-
-        value = seasonTotals[username] ?? 0;
-
-      } else {
-
-        value = row[i - 2] || "";
-
-      }
-
-      if (i === 0) {
-
-        value = `
-          <a class="player-link"
-             href="?player=${encodeURIComponent(username)}">
-             ${escapeHTML(value)}
-          </a>
-        `;
-
-      }
-
-      const isPickColumn = [3, 5, 7, 9, 11, 13, 15].includes(i);
-
-      if (isPickColumn && value) {
-
-        const pick = String(row[i - 2] || "").trim();
-
-        if (winners.has(pick)) {
-
-          style = "background-color: #32c98d;";
-
-        } else if (losers.has(pick)) {
-
-          style = "background-color: #fc6799;";
-
-        }
-
-      }
-
-      html += `
-        <td style="${style}">
-          ${i === 0 ? value : escapeHTML(value)}
-        </td>
-      `;
-
-    }
-
-    html += "</tr>";
-
-  });
-
-  html += "</tbody></table>";
-
-  const tallyGames = [
-
-    { gameCol: 3, confCol: 4, teamCol: 22, countCol: 23 },
-
-    { gameCol: 5, confCol: 6, teamCol: 24, countCol: 25 },
-
-    { gameCol: 7, confCol: 8, teamCol: 26, countCol: 27 },
-
-    { gameCol: 9, confCol: 10, teamCol: 28, countCol: 29 },
-
-    { gameCol: 11, confCol: 12, teamCol: 30, countCol: 31 },
-
-    { gameCol: 13, confCol: 14, teamCol: 32, countCol: 33 }
-
-  ];
-
-  const tallySourceRows = [
-    week.rows[0] || [],
-    week.rows[1] || []
-  ];
-
-  html += '<table class="tally-table"><colgroup>';
-
-  headers.forEach((header, index) => {
-
-    if (index === 0) {
-      html += '<col style="width:14%">';
-    } else if (index === 1) {
-      html += '<col style="width:5%">';
-    } else if (index === 2) {
-      html += '<col style="width:6%">';
-    } else if (index % 2 === 0) {
-      html += '<col class="conf-column">';
-    } else {
-      html += '<col class="game-column">';
-    }
-
-  });
-
-  html += '</colgroup><tbody>';
-
-  tallySourceRows.forEach((sourceRow, rowIndex) => {
-
-    html += "<tr>";
-
-    for (let i = 0; i < 17; i++) {
-
-      let value = "";
-
-      if (i === 0 && rowIndex === 0) {
-        value = "Pick Distribution";
-      }
-
-      const game = tallyGames.find(g => g.gameCol === i);
-
-      const conf = tallyGames.find(g => g.confCol === i);
-
-      if (game) {
-
-        value = sourceRow[game.teamCol] || "";
-
-      } else if (conf) {
-
-        value = sourceRow[conf.countCol] || "";
-
-      }
-
-      html += `<td>${escapeHTML(value)}</td>`;
-
-    }
-
-    html += "</tr>";
-
-  });
-
-  html += '</tbody></table>';
-
-  const wildcards = week.rows[3]?.[22] || "";
-
-  html += `
-    <p class="wildcards">
-      <strong>Wildcards:</strong> ${escapeHTML(wildcards)}
-    </p>
-  `;
-
-  container.innerHTML = html;
-
-  const table = container.querySelector("table");
-
-  const tableHeaders = table.querySelectorAll("th");
-
-  let currentSortColumn = -1;
-
-  let sortAscending = true;
-
-  tableHeaders.forEach(header => {
-
-    header.addEventListener("click", () => {
-
-      const column = Number(header.dataset.column);
-
-      if (currentSortColumn === column) {
-
-        sortAscending = !sortAscending;
-
-      } else {
-
-        currentSortColumn = column;
-
-        sortAscending = true;
-
-      }
-
-      const tbody = table.querySelector("tbody");
-
-      const tableRows = Array.from(tbody.querySelectorAll("tr"));
-
-      tableRows.sort((a, b) => {
-
-        const valueA = a.cells[column].textContent.trim();
-
-        const valueB = b.cells[column].textContent.trim();
-
-        if (!valueA) return 1;
-
-        if (!valueB) return -1;
-
-        const numberA = Number(valueA);
-
-        const numberB = Number(valueB);
-
-        let comparison;
-
-        if (
-          valueA !== "" &&
-          valueB !== "" &&
-          !isNaN(numberA) &&
-          !isNaN(numberB)
-        ) {
-
-          comparison = numberA - numberB;
-
-        } else {
-
-          comparison = valueA.localeCompare(
-            valueB,
-            undefined,
-            {
-              numeric: true,
-              sensitivity: "base"
-            }
-          );
-
-        }
-
-        return sortAscending ? comparison : -comparison;
-
-      });
-
-      tableRows.forEach(row => tbody.appendChild(row));
-
-      tableHeaders.forEach(th => {
-
-        th.classList.remove("sorted-asc", "sorted-desc");
-
-      });
-
-      header.classList.add(
-        sortAscending ? "sorted-asc" : "sorted-desc"
-      );
-
-    });
-
-  });
-
-}
-
-
-function buildPlayerPage(
-  username,
-  weeks,
-  lastNames,
-  weeklyStats,
-  container
-) {
-
-  const displayName = lastNames[username] || username;
-
-  document.getElementById("week-title").textContent = displayName;
-
-  document.getElementById("week-nav").innerHTML =
-    '<a class="back-link" href="?week=1">← Back to standings</a>';
-
-  const allRows = [];
-
-  weeks.forEach(week => {
-
-    const row = week.rows
-      .slice(2)
-      .find(r => String(r[0] || "").trim() === username);
-
-    if (!row) return;
-
-    const pickHeaders = [0, 2, 4, 6, 8, 10, 12].map(
-      i => String(week.headers[i + 1] || "").trim()
-    );
-
-    const spreadIndex = pickHeaders.findIndex(header =>
-      /@.*[+-]\s*\d+(?:\.\d+)?\s*$/.test(header) ||
-      /@.*\s\d+(?:\.\d+)?\s*$/.test(header)
-    );
-
-    const wildcardIndex = pickHeaders.findIndex(header =>
-      /wildcard|(^|\W)wc($|\W)/i.test(header)
-    );
-
-    const spread = spreadIndex >= 0 ? spreadIndex : 5;
-
-    const wildcard = wildcardIndex >= 0 ? wildcardIndex : 6;
-
-    const normalIndices = [0, 1, 2, 3, 4, 5, 6]
-      .filter(i => i !== spread && i !== wildcard)
-      .slice(0, 5);
-
-    const order = [
-      ...normalIndices,
-      spread,
-      wildcard
+    // Main table headers:
+    // Last Name | Score | Season | Original columns B through O
+    const headers = [
+      "Last Name",
+      "Score",
+      "Season",
+      ...week.headers.slice(1, 15)
     ];
 
-    allRows.push({
-      week: week.name.replace("Week ", ""),
-      row,
-      order,
-      stats: weeklyStats[week.name]?.[username] || {}
+    // Define column widths consistently
+    function addColumnWidths() {
+      headers.forEach((header, index) => {
+        if (index === 0) {
+          html += '<col style="width:14%">';
+        } else if (index === 1) {
+          html += '<col style="width:5%">';
+        } else if (index === 2) {
+          html += '<col style="width:6%">';
+        } else if (index % 2 === 0) {
+          html += '<col class="conf-column">';
+        } else {
+          html += '<col class="game-column">';
+        }
+      });
+    }
+
+    let html = "<table><colgroup>";
+
+    addColumnWidths();
+
+    html += "</colgroup><thead><tr>";
+
+    // Build sortable column headings
+    headers.forEach((header, index) => {
+      html += `<th data-column="${index}">${escapeHTML(header)}</th>`;
     });
 
-  });
+    html += "</tr></thead><tbody>";
 
-  let html = `
-    <table class="player-table">
-      <thead>
-        <tr>
-          <th>Week</th>
-  `;
+    // Get winners and losers from the entire worksheet
+    const winners = new Set();
+    const losers = new Set();
 
-  if (allRows.length) {
+    rows.forEach(row => {
+      const winner = String(row[18] || "").trim();
+      const loser = String(row[19] || "").trim();
 
-    allRows[0].order.forEach((idx, i) => {
-
-      const label =
-        idx === allRows[0].order[5]
-          ? "Spread"
-          : idx === allRows[0].order[6]
-            ? "Wildcard"
-            : `Gm ${i + 1}`;
-
-      html += `
-        <th class="pick">${label}</th>
-        <th class="conf">Conf</th>
-      `;
-
+      if (winner) winners.add(winner);
+      if (loser) losers.add(loser);
     });
 
-  }
+    // Build participant rows
+    rows.forEach(row => {
+      html += "<tr>";
 
-  html += `
-          <th>Week</th>
-          <th>Rk</th>
-          <th>Season</th>
-          <th>Rk</th>
-        </tr>
-      </thead>
-      <tbody>
-  `;
+      const username = String(row[0] || "").trim();
 
-  allRows.forEach(item => {
+      for (let i = 0; i < 17; i++) {
+        let value = "";
+        let cellStyle = "";
 
-    html += `<tr><td>${item.week}</td>`;
+        if (i === 0) {
+          // Last Name
+          value = lastNames[username] || username;
 
-    item.order.forEach(idx => {
+        } else if (i === 1) {
+          // Weekly Score
+          value = row[15] || "";
 
-      html += `
-        <td>${escapeHTML(item.row[1 + idx * 2] || "")}</td>
-        <td>${escapeHTML(item.row[2 + idx * 2] || "")}</td>
-      `;
+        } else if (i === 2) {
+          // Cumulative Season Score
+          value = seasonTotals[username] ?? 0;
 
+        } else {
+          // Original spreadsheet columns B through O
+          value = row[i - 2] || "";
+        }
+
+        // Game picks and Wildcard pick
+        const isPickColumn = [3, 5, 7, 9, 11, 13, 15].includes(i);
+
+        if (isPickColumn && value) {
+          const pick = String(value).trim();
+
+          if (winners.has(pick)) {
+            cellStyle = "background-color: #32c98d;";
+          } else if (losers.has(pick)) {
+            cellStyle = "background-color: #fc6799;";
+          }
+        }
+
+        html += `<td style="${cellStyle}">${escapeHTML(value)}</td>`;
+      }
+
+      html += "</tr>";
     });
+
+    html += "</tbody></table>";
+
+    // Build Total Picks table
+    const tallyGames = [
+      { gameCol: 3, confCol: 4, teamCol: 22, countCol: 23 },
+      { gameCol: 5, confCol: 6, teamCol: 24, countCol: 25 },
+      { gameCol: 7, confCol: 8, teamCol: 26, countCol: 27 },
+      { gameCol: 9, confCol: 10, teamCol: 28, countCol: 29 },
+      { gameCol: 11, confCol: 12, teamCol: 30, countCol: 31 },
+      { gameCol: 13, confCol: 14, teamCol: 32, countCol: 33 }
+    ];
+
+    // Tally data comes from spreadsheet rows 2 and 3
+    const tallySourceRows = [
+      rows[0] || [],
+      rows[1] || []
+    ];
+
+    html += '<table class="tally-table"><colgroup>';
+
+    addColumnWidths();
+
+    html += '</colgroup><tbody>';
+
+    tallySourceRows.forEach((sourceRow, rowIndex) => {
+      html += '<tr>';
+
+      for (let i = 0; i < 17; i++) {
+        let value = "";
+
+        // First cell of first row
+        if (i === 0 && rowIndex === 0) {
+          value = "Pick Distribution";
+        }
+
+        const game = tallyGames.find(g => g.gameCol === i);
+        const conf = tallyGames.find(g => g.confCol === i);
+
+        if (game) {
+          value = sourceRow[game.teamCol] || "";
+        } else if (conf) {
+          value = sourceRow[conf.countCol] || "";
+        }
+
+        html += `<td>${escapeHTML(value)}</td>`;
+      }
+
+      html += '</tr>';
+    });
+
+    html += '</tbody></table>';
+
+    // Display Wildcards from cell W5
+    const wildcards = rows[3]?.[22] || "";
 
     html += `
-      <td>${escapeHTML(item.stats.score ?? "")}</td>
-      <td>${escapeHTML(item.stats.rank ?? "")}</td>
-      <td>${escapeHTML(item.stats.season ?? "")}</td>
-      <td>${escapeHTML(item.stats.seasonRank ?? "")}</td>
-    </tr>
+      <p class="wildcards">
+        <strong>Wildcards:</strong> ${escapeHTML(wildcards)}
+      </p>
     `;
 
-  });
+    // Display completed tables
+    container.innerHTML = html;
 
-  html += `
-      </tbody>
-    </table>
-  `;
+    // Enable sorting on the main table
+    const table = container.querySelector("table");
+    const tableHeaders = table.querySelectorAll("th");
 
-  container.innerHTML = html;
+    let currentSortColumn = -1;
+    let sortAscending = true;
 
+    tableHeaders.forEach(header => {
+      header.addEventListener("click", () => {
+        const column = Number(header.dataset.column);
+
+        if (currentSortColumn === column) {
+          sortAscending = !sortAscending;
+        } else {
+          currentSortColumn = column;
+          sortAscending = true;
+        }
+
+        const tbody = table.querySelector("tbody");
+        const tableRows = Array.from(tbody.querySelectorAll("tr"));
+
+        tableRows.sort((a, b) => {
+          const valueA = a.cells[column].textContent.trim();
+          const valueB = b.cells[column].textContent.trim();
+
+          if (!valueA) return 1;
+          if (!valueB) return -1;
+
+          const numberA = Number(valueA);
+          const numberB = Number(valueB);
+
+          let comparison;
+
+          if (
+            valueA !== "" &&
+            valueB !== "" &&
+            !isNaN(numberA) &&
+            !isNaN(numberB)
+          ) {
+            comparison = numberA - numberB;
+          } else {
+            comparison = valueA.localeCompare(valueB, undefined, {
+              numeric: true,
+              sensitivity: "base"
+            });
+          }
+
+          return sortAscending ? comparison : -comparison;
+        });
+
+        tableRows.forEach(row => tbody.appendChild(row));
+
+        tableHeaders.forEach(th => {
+          th.classList.remove("sorted-asc", "sorted-desc");
+        });
+
+        header.classList.add(
+          sortAscending ? "sorted-asc" : "sorted-desc"
+        );
+      });
+    });
+
+  } catch (error) {
+    container.innerHTML =
+      `<p style="color:#b00020">${escapeHTML(error.message)}</p>`;
+  }
 }
 
-
 function escapeHTML(value) {
-
   return String(value).replace(/[&<>"']/g, character => ({
-
     "&": "&amp;",
     "<": "&lt;",
     ">": "&gt;",
     '"': "&quot;",
     "'": "&#39;"
-
   })[character]);
-
 }
 
-
 loadData();
-
 </script>
 
 </body>
