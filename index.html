@@ -571,21 +571,38 @@ function buildPlayerPage(data, username, lastNames) {
     });
 
     const picks = orderedPositions.map(pos => {
-      const pick = String(playerRow[pickIndexes[pos]] || "").trim();
+      let pick = String(playerRow[pickIndexes[pos]] || "").trim();
+      const confidence = Number(playerRow[pickIndexes[pos] + 1]) || 0;
+      const header = pickHeaders[pos] || (pos === spreadPos ? "Spread" : pos === wildcardPos ? "Wildcard" : `Gm${normalPositions.indexOf(pos)+1}`);
+
+      // Add (wc) to the wildcard selection.
+      if (pos === wildcardPos && pick) pick += " (wc)";
+
+      // Convert the spread into the selected team's perspective.
+      if (pos === spreadPos && pick) {
+        const matchup = header.match(/([A-Z]{2,3})\s*@\s*([A-Z]{2,3})\s*([+-]\d+(?:\.\d+)?)/i);
+        if (matchup) {
+          const away = matchup[1].toUpperCase();
+          const home = matchup[2].toUpperCase();
+          const line = Number(matchup[3]);
+          const selected = pick.toUpperCase();
+          const adjustedLine = selected === away ? -line : selected === home ? line : null;
+          if (adjustedLine !== null) {
+            pick = `${pick} ${adjustedLine > 0 ? "+" : ""}${adjustedLine}`;
+          }
+        }
+      }
+
       let cellStyle = "";
-      if (pick && winners.has(pick)) {
+      const colorPick = pick.replace(/\s*\(wc\)\s*/i, "").replace(/\s+[+-]\d+(?:\.\d+)?$/, "").trim();
+      if (colorPick && winners.has(colorPick)) {
         cellStyle = "background-color: #32c98d;";
-      } else if (pick && losers.has(pick)) {
+      } else if (colorPick && losers.has(colorPick)) {
         cellStyle = "background-color: #fc6799;";
       }
 
-      return {
-        header: pickHeaders[pos] || (pos === spreadPos ? "Spread" : pos === wildcardPos ? "Wildcard" : `Gm${normalPositions.indexOf(pos)+1}`),
-        pick,
-        confidence: playerRow[pickIndexes[pos] + 1] || "",
-        cellStyle
-      };
-    });
+      return { confidence, pick, cellStyle };
+    }).sort((a, b) => b.confidence - a.confidence);
 
     playerWeeks.push({ weekNum, picks, weeklyScore, weeklyRank, playerSeasonScore, seasonRank });
   });
@@ -595,11 +612,11 @@ function buildPlayerPage(data, username, lastNames) {
     return;
   }
 
-  const headers = ["Week", ...playerWeeks[0].picks.flatMap(p => [p.header, "Conf"]), "Week Score", "Weekly Rank", "Season Score", "Season Rank"];
+  const headers = ["Week", "Pick 7", "Pick 6", "Pick 5", "Pick 4", "Pick 3", "Pick 2", "Pick 1", "Week Score", "Weekly Rank", "Season Score", "Season Rank"];
   let html = "<table><thead><tr>" + headers.map(h => `<th>${escapeHTML(h)}</th>`).join("") + "</tr></thead><tbody>";
   playerWeeks.forEach(w => {
     html += `<tr><td>${w.weekNum}</td>`;
-    w.picks.forEach(p => { html += `<td style="${p.cellStyle}">${escapeHTML(p.pick)}</td><td>${escapeHTML(p.confidence)}</td>`; });
+    w.picks.forEach(p => { html += `<td style="${p.cellStyle}">${escapeHTML(p.pick)}</td>`; });
     html += `<td>${w.weeklyScore}</td><td>${w.weeklyRank}</td><td>${w.playerSeasonScore}</td><td>${w.seasonRank}</td></tr>`;
   });
   html += "</tbody></table>";
