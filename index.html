@@ -121,6 +121,11 @@
     border-bottom: 1px solid #ddd;
   }
   
+  a.player-link, a.player-link:visited, a.player-link:hover, a.player-link:active {
+    color: #222;
+    text-decoration: none;
+  }
+
   #week-nav a {
     color: #333;
     text-decoration: none;
@@ -347,7 +352,7 @@ async function loadData() {
         }
 
         if (i === 0) {
-          html += `<td style="${cellStyle}"><a href="?player=${encodeURIComponent(username)}">${escapeHTML(value)}</a></td>`;
+          html += `<td style="${cellStyle}"><a class="player-link" href="?player=${encodeURIComponent(username)}">${escapeHTML(value)}</a></td>`;
         } else {
           html += `<td style="${cellStyle}">${escapeHTML(value)}</td>`;
         }
@@ -556,11 +561,31 @@ function buildPlayerPage(data, username, lastNames) {
     const normalPositions = pickIndexes.map((_, pos) => pos).filter(pos => pos !== spreadPos && pos !== wildcardPos);
     const orderedPositions = [...normalPositions, spreadPos, wildcardPos];
 
-    const picks = orderedPositions.map(pos => ({
-      header: pickHeaders[pos] || (pos === spreadPos ? "Spread" : pos === wildcardPos ? "Wildcard" : `Gm${normalPositions.indexOf(pos)+1}`),
-      pick: playerRow[pickIndexes[pos]] || "",
-      confidence: playerRow[pickIndexes[pos] + 1] || ""
-    }));
+    const winners = new Set();
+    const losers = new Set();
+    rows.forEach(row => {
+      const winner = String(row[18] || "").trim();
+      const loser = String(row[19] || "").trim();
+      if (winner) winners.add(winner);
+      if (loser) losers.add(loser);
+    });
+
+    const picks = orderedPositions.map(pos => {
+      const pick = String(playerRow[pickIndexes[pos]] || "").trim();
+      let cellStyle = "";
+      if (pick && winners.has(pick)) {
+        cellStyle = "background-color: #32c98d;";
+      } else if (pick && losers.has(pick)) {
+        cellStyle = "background-color: #fc6799;";
+      }
+
+      return {
+        header: pickHeaders[pos] || (pos === spreadPos ? "Spread" : pos === wildcardPos ? "Wildcard" : `Gm${normalPositions.indexOf(pos)+1}`),
+        pick,
+        confidence: playerRow[pickIndexes[pos] + 1] || "",
+        cellStyle
+      };
+    });
 
     playerWeeks.push({ weekNum, picks, weeklyScore, weeklyRank, playerSeasonScore, seasonRank });
   });
@@ -574,7 +599,7 @@ function buildPlayerPage(data, username, lastNames) {
   let html = "<table><thead><tr>" + headers.map(h => `<th>${escapeHTML(h)}</th>`).join("") + "</tr></thead><tbody>";
   playerWeeks.forEach(w => {
     html += `<tr><td>${w.weekNum}</td>`;
-    w.picks.forEach(p => { html += `<td>${escapeHTML(p.pick)}</td><td>${escapeHTML(p.confidence)}</td>`; });
+    w.picks.forEach(p => { html += `<td style="${p.cellStyle}">${escapeHTML(p.pick)}</td><td>${escapeHTML(p.confidence)}</td>`; });
     html += `<td>${w.weeklyScore}</td><td>${w.weeklyRank}</td><td>${w.playerSeasonScore}</td><td>${w.seasonRank}</td></tr>`;
   });
   html += "</tbody></table>";
