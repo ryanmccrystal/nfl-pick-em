@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-22T01:35:37.431582+00:00",
+  "updated": "2026-11-22T01:42:15.259687+00:00",
   "sheets": [
     {
       "name": "Week 10",
@@ -15,7 +15,7 @@
         "Conf",
         "PIT @ CIN",
         "Conf",
-        "LAC @ BAL",
+        "LAC @ BAL -4.5",
         "Conf",
         "Wildcard",
         "Conf.",
@@ -156,29 +156,7 @@
           "DAL",
           "",
           "Wildcard Count",
-          "BUF (13), JAC (9), LAR (4), IND (3), SEA (1)"
-        ],
-        [
-          "GRIFFIN-DAVID191",
-          "CAR",
-          "4",
-          "MIN",
-          "5",
-          "KC",
-          "6",
-          "DAL",
-          "2",
-          "CIN",
-          "7",
-          "LAC",
-          "1",
-          "IND",
-          "3",
-          "26",
-          "Win",
-          "",
-          "CIN",
-          "PIT"
+          "BUF (13), JAC (9), LAR (4), IND (2), SEA (1)"
         ],
         [
           "JOHN-P-MICH",
@@ -199,8 +177,8 @@
           "25",
           "Win",
           "",
-          "LAC",
-          "BAL"
+          "CIN",
+          "PIT"
         ],
         [
           "TKEYLER",
@@ -221,8 +199,8 @@
           "25",
           "Win",
           "",
-          "BUF",
-          "NYJ"
+          "LAC",
+          "BAL"
         ],
         [
           "ERICMAROUN",
@@ -243,8 +221,8 @@
           "25",
           "Win",
           "",
-          "JAC",
-          "TEN"
+          "BUF",
+          "NYJ"
         ],
         [
           "theJCook",
@@ -265,8 +243,8 @@
           "25",
           "Win",
           "",
-          "LAR",
-          "ARZ"
+          "JAC",
+          "TEN"
         ],
         [
           "JESSELEEHOLT",
@@ -287,10 +265,8 @@
           "25",
           "Win",
           "",
-          "IND",
-          "MIA",
-          "",
-          "Notes:"
+          "LAR",
+          "ARZ"
         ],
         [
           "WILL-PETERSON",
@@ -311,10 +287,10 @@
           "25",
           "Win",
           "",
-          "SEA",
-          "LV",
+          "IND",
+          "MIA",
           "",
-          "LA = LAR"
+          "Notes:"
         ],
         [
           "rmcc13",
@@ -335,10 +311,10 @@
           "24",
           "Win",
           "",
+          "SEA",
+          "LV",
           "",
-          "",
-          "",
-          "ARI = ARZ"
+          "LA = LAR"
         ],
         [
           "ANTHONY-TATASEO",
@@ -362,7 +338,7 @@
           "",
           "",
           "",
-          "WAS = WSH"
+          "ARI = ARZ"
         ],
         [
           "rosstracey",
@@ -381,7 +357,12 @@
           "BUF",
           "7",
           "24",
-          "Win"
+          "Win",
+          "",
+          "",
+          "",
+          "",
+          "WAS = WSH"
         ],
         [
           "Vanilla-Ike",
@@ -420,6 +401,25 @@
           "7",
           "24",
           "Win"
+        ],
+        [
+          "GRIFFIN-DAVID191",
+          "CAR",
+          "4",
+          "MIN",
+          "5",
+          "KC",
+          "6",
+          "DAL",
+          "2",
+          "CIN",
+          "7",
+          "LAC",
+          "1",
+          "",
+          "",
+          "23",
+          " "
         ],
         [
           "jbp20",
