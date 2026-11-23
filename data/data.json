@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-23T16:56:02.679936+00:00",
+  "updated": "2026-11-23T18:52:30.220845+00:00",
   "sheets": [
     {
       "name": "Week 11",
@@ -7990,6 +7990,256 @@
         [
           "GWILLS610",
           "Wills"
+        ]
+      ]
+    },
+    {
+      "name": "Champs",
+      "headers": [
+        "Year",
+        "Player",
+        "Place"
+      ],
+      "rows": [
+        [
+          "2025",
+          "Patel",
+          "Champion"
+        ],
+        [
+          "2025",
+          "Thompson",
+          "Runner-Up"
+        ],
+        [
+          "2025",
+          "Archer",
+          "3rd Place"
+        ],
+        [
+          "2025",
+          "Bowie",
+          "4th Place"
+        ],
+        [
+          "2024",
+          "Smith",
+          "Champion"
+        ],
+        [
+          "2024",
+          "Cook",
+          "Runner-Up"
+        ],
+        [
+          "2024",
+          "Archer",
+          "3rd Place"
+        ],
+        [
+          "2024",
+          "Hill",
+          "4th Place"
+        ],
+        [
+          "2023",
+          "Kennedy",
+          "Champion"
+        ],
+        [
+          "2023",
+          "Cook",
+          "Runner-Up"
+        ],
+        [
+          "2023",
+          "Leibering",
+          "3rd Place"
+        ],
+        [
+          "2023",
+          "Archer",
+          "4th Place"
+        ],
+        [
+          "2022",
+          "Huling",
+          "Champion"
+        ],
+        [
+          "2022",
+          "Lyon",
+          "Runner-Up"
+        ],
+        [
+          "2022",
+          "Leamy",
+          "3rd Place"
+        ],
+        [
+          "2022",
+          "McCrystal",
+          "3rd Place"
+        ],
+        [
+          "2021",
+          "Risk",
+          "Champion"
+        ],
+        [
+          "2021",
+          "Dorman",
+          "Runner-Up"
+        ],
+        [
+          "2021",
+          "Smith",
+          "3rd Place"
+        ],
+        [
+          "2021",
+          "Bowie",
+          "4th Place"
+        ],
+        [
+          "2020",
+          "Leibering",
+          "Champion"
+        ],
+        [
+          "2020",
+          "Eichenbaum",
+          "Runner-Up"
+        ],
+        [
+          "2020",
+          "Huling",
+          "3rd Place"
+        ],
+        [
+          "2020",
+          "Tracey",
+          "4th Place"
+        ],
+        [
+          "2019",
+          "Dorman",
+          "Champion"
+        ],
+        [
+          "2019",
+          "Tracey",
+          "Runner-Up"
+        ],
+        [
+          "2019",
+          "Furman",
+          "3rd Place"
+        ],
+        [
+          "2019",
+          "A.Tataseo",
+          "4th Place"
+        ],
+        [
+          "2019",
+          "F.Tataseo",
+          "4th Place"
+        ],
+        [
+          "2018",
+          "Billinger",
+          "Champion"
+        ],
+        [
+          "2018",
+          "Warner",
+          "Runner-Up"
+        ],
+        [
+          "2018",
+          "Periman",
+          "3rd Place"
+        ],
+        [
+          "2018",
+          "Tracey",
+          "4th Place"
+        ],
+        [
+          "2017",
+          "A.Tataseo",
+          "Champion"
+        ],
+        [
+          "2017",
+          "F.Tataseo",
+          "Champion"
+        ],
+        [
+          "2017",
+          "Eichenbaum",
+          "Runner-Up"
+        ],
+        [
+          "2017",
+          "Holt",
+          "3rd Place"
+        ],
+        [
+          "2017",
+          "Blanck",
+          "4th Place"
+        ],
+        [
+          "2016",
+          "Keyler",
+          "Champion"
+        ],
+        [
+          "2016",
+          "Kennedy",
+          "Runner-Up"
+        ],
+        [
+          "2016",
+          "Wills",
+          "3rd Place"
+        ],
+        [
+          "2016",
+          "Dallas",
+          "4th Place"
+        ],
+        [
+          "2015",
+          "Dorman",
+          "Champion"
+        ],
+        [
+          "2015",
+          "Dallas",
+          "Runner-Up"
+        ],
+        [
+          "2015",
+          "Leibering",
+          "3rd Place"
+        ],
+        [
+          "2014",
+          "Plant",
+          "Champion"
+        ],
+        [
+          "2014",
+          "Huff",
+          "Runner-Up"
+        ],
+        [
+          "2014",
+          "Dahlgren",
+          "3rd Place"
         ]
       ]
     }
