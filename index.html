@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>NFL Pick'em - Week 1</title>
+<title>NFL Pick'em Standings</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -197,13 +197,20 @@
       flex-basis: min(113px, 29vw);
     }
   }
+
+  .season-table th, .season-table td { padding: 7px 8px; }
+  .season-table th:first-child, .season-table td:first-child { width: 22%; }
+  .season-table th { white-space: nowrap; }
+  @media (max-width: 700px) {
+    .season-table { min-width: 720px; }
+  }
 </style>
 </head>
 
 <body>
 
 <nav id="week-nav"></nav>
-<h2 id="week-title">Week 1</h2>
+<h2 id="week-title">Season Standings</h2>
 
 <div id="table-container" class="table-container">
   Loading...
@@ -237,6 +244,23 @@ async function loadData() {
 
     const week = data.sheets.find(sheet => sheet.name === weekName);
     const users = data.sheets.find(sheet => sheet.name === "Users");
+
+    const playerUsername = new URLSearchParams(window.location.search).get("player");
+    if (playerUsername) {
+      const lastNames = {};
+      if (users) users.rows.forEach(row => {
+        const username = String(row[0] || "").trim();
+        const lastName = String(row[1] || "").trim();
+        if (username && lastName) lastNames[username] = lastName;
+      });
+      buildPlayerPage(data, playerUsername, lastNames);
+      return;
+    }
+
+    if (!new URLSearchParams(window.location.search).has("week")) {
+      buildSeasonStandings(data, users);
+      return;
+    }
 
     if (!week) {
       throw new Error(weekName + " worksheet not found.");
@@ -282,12 +306,6 @@ async function loadData() {
           championships[username] = years.slice(0, trophyCount);
         }
       });
-    }
-
-    const playerUsername = new URLSearchParams(window.location.search).get("player");
-    if (playerUsername) {
-      buildPlayerPage(data, playerUsername, lastNames);
-      return;
     }
 
     const rows = week.rows;
@@ -560,6 +578,111 @@ function formatRank(scores, score) {
   const firstPosition = sortedScores.findIndex(value => value === Number(score)) + 1;
   const tiedCount = numericScores.filter(value => value === Number(score)).length;
   return tiedCount > 1 ? `T-${firstPosition}` : firstPosition;
+}
+
+function buildSeasonStandings(data, users) {
+  const container = document.getElementById("table-container");
+  document.getElementById("week-title").textContent = "Season Standings";
+
+  const weeks = data.sheets
+    .filter(sheet => /^Week\s+\d+$/i.test(sheet.name))
+    .map(sheet => ({ sheet, number: Number(sheet.name.match(/\d+/)[0]) }))
+    .sort((a, b) => a.number - b.number);
+
+  const lastNames = {};
+  const championships = {};
+  if (users) users.rows.forEach(row => {
+    const username = String(row[0] || "").trim();
+    const lastName = String(row[1] || "").trim();
+    const champCell = String(row[2] || "");
+    if (username && lastName) lastNames[username] = lastName;
+    if (username && champCell.includes("🏆")) {
+      const count = (champCell.match(/🏆/g) || []).length;
+      championships[username] = row.slice(3, 6).map(v => String(v || "").trim()).filter(Boolean).slice(0, count);
+    }
+  });
+
+  const players = {};
+  const isTeamResult = (pick, winners, losers) => {
+    if (!pick) return null;
+    if (winners.has(pick)) return "W";
+    if (losers.has(pick)) return "L";
+    return null;
+  };
+
+  weeks.forEach(({sheet, number}) => {
+    const rows = sheet.rows || [];
+    const winners = new Set(rows.map(r => String(r[18] || "").trim()).filter(Boolean));
+    const losers = new Set(rows.map(r => String(r[19] || "").trim()).filter(Boolean));
+    const pickHeaders = (sheet.headers || []).map(String);
+    const wildcardIndex = pickHeaders.findIndex(h => /^wildcard$|^wc$/i.test(h.trim()));
+    const spreadIndex = pickHeaders.findIndex(h => /[+-]\s*\d+(?:\.\d+)?/.test(h));
+
+    rows.forEach(row => {
+      const username = String(row[0] || "").trim();
+      if (!username || username.toLowerCase() === "participant") return;
+      if (!players[username]) players[username] = {
+        username, name: lastNames[username] || username,
+        season: 0, wcW: 0, wcL: 0, sevenW: 0, sevenL: 0,
+        spreadW: 0, spreadL: 0, weeklyScores: [],
+        weeks: {}
+      };
+      const player = players[username];
+      const score = Number(String(row[15] || "0").replace(/,/g, ""));
+      if (Number.isFinite(score)) {
+        player.season += score;
+        player.weeklyScores.push({week: number, score});
+        player.weeks[number] = score;
+      }
+
+      if (wildcardIndex >= 0) {
+        const result = isTeamResult(String(row[wildcardIndex] || "").trim(), winners, losers);
+        if (result === "W") player.wcW++;
+        else if (result === "L") player.wcL++;
+      }
+
+      // The 7-point record is the pick whose adjacent confidence value is 7.
+      for (let pickIndex = 1; pickIndex <= 13; pickIndex += 2) {
+        const confidence = Number(String(row[pickIndex + 1] || "").trim());
+        if (confidence !== 7) continue;
+        const result = isTeamResult(String(row[pickIndex] || "").trim(), winners, losers);
+        if (result === "W") player.sevenW++;
+        else if (result === "L") player.sevenL++;
+      }
+
+      if (spreadIndex >= 1 && spreadIndex <= 13 && spreadIndex % 2 === 1) {
+        const result = isTeamResult(String(row[spreadIndex] || "").trim(), winners, losers);
+        if (result === "W") player.spreadW++;
+        else if (result === "L") player.spreadL++;
+      }
+    });
+  });
+
+  const sorted = Object.values(players).sort((a, b) => b.season - a.season || a.name.localeCompare(b.name));
+  const fourthScore = sorted.length >= 4 ? sorted[3].season : (sorted[sorted.length - 1]?.season || 0);
+  const recentWeeks = weeks.slice(-4).map(w => w.number);
+
+  const weekLinks = weeks.map(({number}) => `<a href="?week=${number}">Week ${number}</a>`).join("");
+  document.getElementById("week-nav").innerHTML = `<a href="./" class="active">Season</a>${weekLinks}`;
+
+  let html = `<table class="season-table"><thead><tr>
+    <th>Player</th><th>Season</th><th>GB$</th><th>WC</th><th>7-Point</th><th>Spread</th><th>Last 4</th><th>High</th>
+  </tr></thead><tbody>`;
+
+  sorted.forEach((p, index) => {
+    const gb = p.season >= fourthScore ? "--" : Math.max(0, fourthScore - p.season);
+    const last4 = recentWeeks.reduce((sum, wk) => sum + (p.weeks[wk] || 0), 0);
+    const high = p.weeklyScores.length ? Math.max(...p.weeklyScores.map(x => x.score)) : 0;
+    const trophies = (championships[p.username] || []).map(year => `<span class="championship-trophy" title="${escapeHTML(year)}">🏆</span>`).join(" ");
+    html += `<tr>
+      <td><a class="player-link" href="?player=${encodeURIComponent(p.username)}">${escapeHTML(p.name)}</a>${trophies ? ` ${trophies}` : ""}</td>
+      <td>${p.season}</td><td>${gb}</td>
+      <td>${p.wcW}-${p.wcL}</td><td>${p.sevenW}-${p.sevenL}</td><td>${p.spreadW}-${p.spreadL}</td>
+      <td>${last4}</td><td>${high}</td>
+    </tr>`;
+  });
+  html += `</tbody></table>`;
+  container.innerHTML = html;
 }
 
 function buildPlayerPage(data, username, lastNames) {
