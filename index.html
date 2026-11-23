@@ -272,9 +272,8 @@ async function loadData() {
     // Build week navigation
     const weekNav = document.getElementById("week-nav");
 
-    weekNav.innerHTML = Array.from({ length: 18 }, (_, i) => {
+    weekNav.innerHTML = `<a href="./">Season</a>` + Array.from({ length: 18 }, (_, i) => {
       const number = i + 1;
-
       return `
         <a href="?week=${number}"
            class="${number === weekNumber ? 'active' : ''}">
@@ -683,6 +682,45 @@ function buildSeasonStandings(data, users) {
   });
   html += `</tbody></table>`;
   container.innerHTML = html;
+
+  // Make season standings sortable by clicking column headers.
+  const seasonTable = container.querySelector(".season-table");
+  const seasonHeaders = seasonTable.querySelectorAll("th");
+  let sortColumn = 1; // Season points
+  let sortDescending = true;
+
+  const sortSeasonTable = (column, descending) => {
+    const tbody = seasonTable.querySelector("tbody");
+    const rows = Array.from(tbody.querySelectorAll("tr"));
+    rows.sort((a, b) => {
+      const av = a.cells[column].textContent.trim();
+      const bv = b.cells[column].textContent.trim();
+      if (column === 0) return av.localeCompare(bv, undefined, {numeric:true,sensitivity:"base"}) * (descending ? -1 : 1);
+      const parseRecord = value => {
+        const match = value.match(/^(\\d+)-(\\d+)$/);
+        if (match) return Number(match[1]) * 1000 + Number(match[2]);
+        if (value === "--") return -Infinity;
+        return Number(value.replace(/,/g, "")) || 0;
+      };
+      return (parseRecord(av) - parseRecord(bv)) * (descending ? -1 : 1);
+    });
+    rows.forEach(row => tbody.appendChild(row));
+    seasonHeaders.forEach(th => th.classList.remove("sorted-asc", "sorted-desc"));
+    seasonHeaders[column].classList.add(descending ? "sorted-desc" : "sorted-asc");
+  };
+
+  seasonHeaders.forEach((header, column) => {
+    header.style.cursor = "pointer";
+    header.addEventListener("click", () => {
+      if (sortColumn === column) sortDescending = !sortDescending;
+      else {
+        sortColumn = column;
+        sortDescending = column === 1;
+      }
+      sortSeasonTable(column, sortDescending);
+    });
+  });
+  sortSeasonTable(1, true);
 }
 
 function buildPlayerPage(data, username, lastNames) {
