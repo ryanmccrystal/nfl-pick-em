@@ -151,6 +151,52 @@
       min-width: 1050px;
     }
   }
+
+  .championship-banners {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 18px auto 24px;
+  }
+  .championship-banner {
+    width: 113px;
+    height: 150px;
+    box-sizing: border-box;
+    border: 5px solid #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    padding: 10px 5px;
+    color: #000;
+    font-family: inherit;
+    font-weight: 700;
+    text-transform: uppercase;
+    flex: 0 1 113px;
+  }
+  .championship-banner .banner-title {
+    font-size: clamp(11px, 2.7vw, 15px);
+    line-height: 1.15;
+    margin-top: 12px;
+  }
+  .championship-banner .banner-place {
+    font-size: clamp(11px, 2.7vw, 15px);
+    line-height: 1.15;
+  }
+  .championship-banner .banner-year {
+    font-size: clamp(22px, 5vw, 30px);
+    line-height: 1;
+    margin-bottom: 12px;
+  }
+  @media (max-width: 480px) {
+    .championship-banner {
+      width: min(113px, 29vw);
+      height: 150px;
+      flex-basis: min(113px, 29vw);
+    }
+  }
 </style>
 </head>
 
@@ -522,6 +568,72 @@ function buildPlayerPage(data, username, lastNames) {
   document.getElementById("week-title").textContent = playerName;
   document.getElementById("week-nav").innerHTML = `<a href="?week=1">← Back to standings</a>`;
 
+  // Championship banners from the Champs worksheet (Year, Player, Place).
+  const champsSheet = data.sheets.find(sheet => sheet.name === "Champs");
+  const champRows = champsSheet?.rows || [];
+  const playerAliases = new Set([
+    username.toLowerCase(),
+    playerName.toLowerCase(),
+    (lastNames[username] || "").toLowerCase()
+  ].filter(Boolean));
+
+  const placeStyles = {
+    "champion": "#C3A552",
+    "1st": "#C3A552",
+    "1": "#C3A552",
+    "runner-up": "#BDBDBD",
+    "runner up": "#BDBDBD",
+    "2nd": "#BDBDBD",
+    "2": "#BDBDBD",
+    "second": "#BDBDBD",
+    "3rd place": "#C78443",
+    "3rd": "#C78443",
+    "3": "#C78443",
+    "third": "#C78443",
+    "4th place": "#845335",
+    "4th": "#845335",
+    "4": "#845335",
+    "fourth": "#845335"
+  };
+  const placeLabels = {
+    "champion": "CHAMPION",
+    "1st": "CHAMPION",
+    "1": "CHAMPION",
+    "runner-up": "RUNNER-UP",
+    "runner up": "RUNNER-UP",
+    "2nd": "RUNNER-UP",
+    "2": "RUNNER-UP",
+    "second": "RUNNER-UP",
+    "3rd place": "3RD PLACE",
+    "3rd": "3RD PLACE",
+    "3": "3RD PLACE",
+    "third": "3RD PLACE",
+    "4th place": "4TH PLACE",
+    "4th": "4TH PLACE",
+    "4": "4TH PLACE",
+    "fourth": "4TH PLACE"
+  };
+
+  const playerChamps = champRows.filter(row => {
+    const champPlayer = String(row[1] || "").trim().toLowerCase();
+    return playerAliases.has(champPlayer);
+  });
+
+  if (playerChamps.length) {
+    const bannerHTML = playerChamps.map(row => {
+      const year = String(row[0] || "").trim();
+      const placeKey = String(row[2] || "").trim().toLowerCase();
+      const background = placeStyles[placeKey] || "#C3A552";
+      const place = placeLabels[placeKey] || String(row[2] || "").trim().toUpperCase();
+      return `<div class="championship-banner" style="background-color:${background}">
+        <div class="banner-title">NFL PICK 'EM</div>
+        <div class="banner-place">${escapeHTML(place)}</div>
+        <div class="banner-year">${escapeHTML(year)}</div>
+      </div>`;
+    }).join("");
+    container.innerHTML = `<div class="championship-banners">${bannerHTML}</div>`;
+  }
+
   const weeks = data.sheets
     .filter(sheet => /^Week \d+$/.test(sheet.name))
     .sort((a, b) => Number(a.name.replace("Week ", "")) - Number(b.name.replace("Week ", "")));
@@ -634,7 +746,8 @@ function buildPlayerPage(data, username, lastNames) {
     html += `<td>${w.weeklyScore}</td><td>${w.weeklyRank}</td><td>${w.playerSeasonScore}</td><td>${w.seasonRank}</td></tr>`;
   });
   html += "</tbody></table>";
-  container.innerHTML = html;
+  const banners = container.querySelector(".championship-banners")?.outerHTML || "";
+  container.innerHTML = banners + html;
 }
 
 function escapeHTML(value) {
