@@ -727,7 +727,7 @@ function buildPlayerPage(data, username, lastNames) {
   const container = document.getElementById("table-container");
   const playerName = lastNames[username] || username;
   document.getElementById("week-title").textContent = playerName;
-  document.getElementById("week-nav").innerHTML = `<a href="?week=1">← Back to standings</a>`;
+  document.getElementById("week-nav").innerHTML = `<a href="./" onclick="if (window.history.length > 1) { window.history.back(); } else { window.location.href = './'; } return false;">← Back</a>`;
 
   // Championship banners from the Champs worksheet (Year, Player, Place).
   const champsSheet = data.sheets.find(sheet => sheet.name === "Champs");
