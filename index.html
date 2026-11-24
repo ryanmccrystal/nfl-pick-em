@@ -665,19 +665,20 @@ function buildSeasonStandings(data, users) {
   document.getElementById("week-nav").innerHTML = `<a href="./" class="active">Season</a>${weekLinks}`;
 
   let html = `<table class="season-table"><thead><tr>
-    <th>Player</th><th>Season</th><th>GB$</th><th>WC</th><th>7-Point</th><th>Spread</th><th>Last 4</th><th>High</th>
+    <th>Player</th><th>Season</th><th>GB$</th><th>WC</th><th>7-Point</th><th>Spread</th><th>Last 4</th><th>Low</th><th>High</th>
   </tr></thead><tbody>`;
 
   sorted.forEach((p, index) => {
     const gb = p.season >= fourthScore ? "--" : Math.max(0, fourthScore - p.season);
     const last4 = recentWeeks.reduce((sum, wk) => sum + (p.weeks[wk] || 0), 0);
+    const low = weeks.length ? Math.min(...weeks.map(w => p.weeks[w.number] ?? 0)) : 0;
     const high = p.weeklyScores.length ? Math.max(...p.weeklyScores.map(x => x.score)) : 0;
     const trophies = (championships[p.username] || []).map(year => `<span class="championship-trophy" title="${escapeHTML(year)}">🏆</span>`).join(" ");
     html += `<tr>
       <td><a class="player-link" href="?player=${encodeURIComponent(p.username)}">${escapeHTML(p.name)}</a>${trophies ? ` ${trophies}` : ""}</td>
       <td>${p.season}</td><td>${gb}</td>
       <td>${p.wcW}-${p.wcL}</td><td>${p.sevenW}-${p.sevenL}</td><td>${p.spreadW}-${p.spreadL}</td>
-      <td>${last4}</td><td>${high}</td>
+      <td>${last4}</td><td>${low}</td><td>${high}</td>
     </tr>`;
   });
   html += `</tbody></table>`;
